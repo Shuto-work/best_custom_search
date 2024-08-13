@@ -1,5 +1,4 @@
 import requests
-from bs4 import BeautifulSoup
 import re
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -62,7 +61,7 @@ def save_to_google_sheets(data, spreadsheet_id, worksheet_name):
 def main():
     api_key = 'AIzaSyAw1MqIItrA5PYxnhxYr7JkX4IEz5BasgA'
     cse_id = '117168291298141ab'
-    query = "大阪 建設 090"
+    query = "大阪 建設 090 株式会社"
     results = search_with_custom_search_api(query, api_key, cse_id)
     if not results:
         print("No results found")
