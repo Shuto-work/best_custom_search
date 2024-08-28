@@ -35,6 +35,8 @@ def scrape_job_detail(base_url, link):
         print(f"{base_url + link} の取得中にエラーが発生しました: {e}")
         return None, None
 
+
+
 def write_to_google_sheet(results):
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     creds = ServiceAccountCredentials.from_json_keyfile_name('./eternal-ruler-429403-f1-4149103d6f77.json', scope)

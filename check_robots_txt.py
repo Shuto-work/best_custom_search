@@ -17,4 +17,4 @@ def check_robots_txt(url):
         print(f"Error fetching robots.txt: {e}")
 
 # 使用例
-check_robots_txt('https://www.gaten.info/list.php?Pref_ids%5B%5D=1&Job_ids%5B%5D=1&Job_ids%5B%5D=2&keyword=')
+check_robots_txt('https://www.hotpepper.jp/SA23/Y300/')
