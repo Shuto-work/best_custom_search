@@ -2,6 +2,7 @@ import requests
 import re
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
+from secret_key import api_key, cse_id, spreadsheet_id  # ここでインポート
 
 
 def search_with_custom_search_api(query, api_key, cse_id, start_index):
@@ -64,8 +65,8 @@ def batch_update_google_sheets(spreadsheet_id, range_name, values):
 
 
 def main():
-    api_key = 'AIzaSyAw1MqIItrA5PYxnhxYr7JkX4IEz5BasgA'
-    cse_id = '117168291298141ab'
+    # api_key = 'AIzaSyAw1MqIItrA5PYxnhxYr7JkX4IEz5BasgA'
+    # cse_id = '117168291298141ab'
     query = "大阪 建設 090"
 
     all_company_info = []
@@ -84,7 +85,7 @@ def main():
         print("No company information found")
         return
 
-    spreadsheet_id = '1iEt_TqDUam_rCqVXJbIgJTyKQICfh3yNE-TM0S-zTVg'
+    # spreadsheet_id = '1iEt_TqDUam_rCqVXJbIgJTyKQICfh3yNE-TM0S-zTVg'
     range_name = 'シート1!B1:C'  # 書き込む範囲を指定
     headers = [['Company Name', 'Phone Number']]
     data = headers + all_company_info  # ヘッダーとデータをまとめる
