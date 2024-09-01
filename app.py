@@ -6,16 +6,35 @@ st.title('Custom Search API')
 st.caption('検索キーワードを入力すると、検索結果から電話番号と社名のリストを取得できます')
 
 with st.expander("留意点"):
-    st.write("This is the content inside the expander.")
+    st.markdown("""
+    1. **検索回数について**:
+    - 1日100回までの上限（検索ページ数によらず）。
+    - 日本時間の16時 or 17時にリセット。
+    2. **検索ページ数について**:
+    - 最初の10ページまでの上限。APIの仕様上、11ページ目以降は検索結果が表示されません。そのため、検索ワードを適宜変えてヒット件数の母数を増やす等の工夫が必要です。
+    3. **検索結果の表示順について**: 
+    - Relevance（関連順）とdate（日付順）から選択可能。  
+    - 同じ検索ワードで異なるデータを取得できますが、重複結果もあるため取得量が2倍になるわけではありません。
+    """)
+
+with st.expander("用語辞典"):
+    st.markdown("""
+    **CSE**:  
+    Custom Search Engineの略。Google検索結果のスクレイピングは規約違反になるため、Googleが提供しているAPIサービスのCSEを利用する必要があります。
+
+    **API**:  
+    アプリ同士の連携のこと。今回はCSEとPythonで構成したこちらの画面を連携させています。
+    """)
 
 with st.form(key="key_word_form"):
     key_word = st.text_input("検索キーワード")
     search_start_page = st.number_input(
-        "検索結果の何ページ目からデータ取得しますか？", step=1, value=1, min_value=1)
+        "検索結果の何ページ目からデータ取得しますか？※最低1ページ目", step=1, value=1, min_value=1, max_value=10)
     search_end_page = st.number_input(
-        "検索結果の何ページ目までデータ取得しますか？", step=1, value=1, min_value=1)
-    sheet_area = st.number_input(
-        "スプレッドシートの何行目からデータ書き込みますか？", step=1, value=1, min_value=1)
+        "検索結果の何ページ目までデータ取得しますか？※最大10ページ目", step=1, value=1, min_value=1, max_value=10)
+    sort_order = st.selectbox(
+        "検索順序を選択してください", ["Relevance", "date"])  # 検索順序の選択
+    output_csv = st.text_input("出力するCSVファイル名", "output.csv")  # 出力CSVファイル名の入力
     action_btn = st.form_submit_button("実行")
 
     if action_btn:
@@ -23,14 +42,16 @@ with st.form(key="key_word_form"):
         st.text(f'検索キーワード：「{key_word}」')
         st.text(f'取得開始ページ：「{search_start_page}」')
         st.text(f'取得終了ページ：「{search_end_page}」')
-        st.text(f'データを書き込み始める行：{sheet_area}')
+        st.text(f'検索結果の表示順序：「{sort_order}」')
+        st.text(f'出力CSVファイル名：「{output_csv}」')
 
         # Save parameters to a JSON file
         params = {
             "key_word": key_word,
             "search_start_page": search_start_page,
             "search_end_page": search_end_page,
-            "sheet_area": sheet_area
+            "sort_order": sort_order,
+            "output_csv": output_csv  # 出力CSVファイル名を追加
         }
         with open('params.json', 'w') as f:
             json.dump(params, f)
