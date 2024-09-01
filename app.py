@@ -1,6 +1,6 @@
-import streamlit as st
-import subprocess
 import json
+import subprocess
+import streamlit as st
 
 st.title('Custom Search API')
 st.caption('検索キーワードを入力すると、検索結果から電話番号と社名のリストを取得できます')
@@ -10,9 +10,12 @@ with st.expander("留意点"):
 
 with st.form(key="key_word_form"):
     key_word = st.text_input("検索キーワード")
-    search_start_page = st.number_input("検索結果の何ページ目からデータ取得しますか？", step=1)
-    search_end_page = st.number_input("検索結果の何ページ目までデータ取得しますか？", step=1)
-    sheet_area = st.number_input("スプレッドシートの何行目からデータ書き込みますか？", step=1)
+    search_start_page = st.number_input(
+        "検索結果の何ページ目からデータ取得しますか？", step=1, value=1, min_value=1)
+    search_end_page = st.number_input(
+        "検索結果の何ページ目までデータ取得しますか？", step=1, value=1, min_value=1)
+    sheet_area = st.number_input(
+        "スプレッドシートの何行目からデータ書き込みますか？", step=1, value=1, min_value=1)
     action_btn = st.form_submit_button("実行")
 
     if action_btn:
@@ -33,7 +36,8 @@ with st.form(key="key_word_form"):
             json.dump(params, f)
 
         # Call custom_search_scraper.py with subprocess
-        result = subprocess.run(['python', 'custom_search_scraper.py'],capture_output=True, text=True)
+        result = subprocess.run(
+            ['python', 'custom_search_scraper.py'], capture_output=True, text=True)
 
         # Display execution result
         if result.returncode == 0:
