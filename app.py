@@ -1,8 +1,9 @@
 import requests
 import json
+import sys
 import subprocess
 import streamlit as st
-import sys
+
 
 st.title('Custom Search API')
 st.caption('検索キーワードを入力すると、検索結果から電話番号と社名のリストを取得できます')
@@ -65,8 +66,11 @@ with st.form(key="key_word_form"):
         # Pythonのフルパスを取得
         python_path = sys.executable
         
-        result = subprocess.run(
-            [python_path, 'python', 'custom_search_scraper.py'], capture_output=True, text=True)
+        # subprocess.runを使ってスクリプトを実行します
+        result = subprocess.run([python_path, 'custom_search_scraper.py'],  # 'python'を省略し、実際のスクリプト名に修正
+                                capture_output=True,  # 標準出力とエラーメッセージをキャプチャ
+                                text=True  # 出力を文字列として処理
+                                )
 
         # Display execution result
         if result.returncode == 0:
