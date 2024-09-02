@@ -2,7 +2,19 @@ import requests
 import re
 import json
 import pandas as pd  # pandasをインポート
-from secret_key import api_key, cse_id  # APIキーとCSE IDのインポート
+# from secret_key import api_key, cse_id  # APIキーとCSE IDのインポート
+import streamlit as st
+
+# `secrets.toml`からAPIキーを取得
+api_key = st.secrets["api_key"]
+cse_id = st.secrets["cse_id"]
+
+# APIキーを使った処理を行う
+st.write(f"API Key: {api_key}")
+st.write(f"CSE ID: {cse_id}")
+
+
+
 
 def search_with_custom_search_api(query, api_key, cse_id, start_index, sort_order):
     try:
