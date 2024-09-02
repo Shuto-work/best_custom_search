@@ -2,7 +2,7 @@ import requests
 import re
 import json
 import pandas as pd  # pandasをインポート
-from config import api_key, cse_id  # APIキーとCSE IDのインポート
+from secret_key import api_key, cse_id  # APIキーとCSE IDのインポート
 
 def search_with_custom_search_api(query, api_key, cse_id, start_index, sort_order):
     try:
