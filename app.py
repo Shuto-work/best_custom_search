@@ -1,3 +1,4 @@
+import requests
 import json
 import subprocess
 import streamlit as st
@@ -46,7 +47,7 @@ with st.form(key="key_word_form"):
         st.text(f'取得終了ページ：「{search_end_page}」')
         st.text(f'検索結果の表示順序：「{sort_order}」')
         st.text(f'出力CSVファイル名：「{output_csv}」')
-        st.text_input(f'CSV出力先のパス:「{output_csv_path}」' )
+        st.text(f'CSV出力先のパス:「{output_csv_path}」' )
 
         # Save parameters to a JSON file
         params = {
