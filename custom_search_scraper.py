@@ -34,20 +34,35 @@ def extract_phone_number_from_snippet(snippet):
     return None
 
 
+# def extract_postal_address(snippet):
+#     # 郵便番号と住所を抽出する正規表現
+#     postal_address_match = re.search(r'〒\d{3}-\d{4}\s+.*?(都|道|府|県).*', snippet)
+#     if postal_address_match:
+#         return postal_address_match.group(1)
+#     return None
+
+
 def extract_company_info_from_results(results):
     company_info = []
     for result in results:
         title = result.get('title')
         snippet = result.get('snippet')
         phone_number = extract_phone_number_from_snippet(snippet)
+        # postal_address = extract_postal_address(snippet)  # 郵便番号と住所を抽出
+
+        # if title and phone_number and snippet:
         if title and phone_number:
+            # remarks = snippet
+            # if postal_address:
+            #     remarks += f"\n住所: {postal_address}"
+            # # company_info.append([phone_number, title])
             company_info.append([phone_number, title])
     return company_info
 
-
 def save_to_csv(filename, data):
     # pandas DataFrameを使用してCSVファイルとして保存
-    df = pd.DataFrame(data, columns=['電話番号','顧客名'])
+    df = pd.DataFrame(data, columns=['電話番号','顧客名',])
+    # df = pd.DataFrame(data, columns=['電話番号','顧客名','住所'])
     df.to_csv(filename, index=False, encoding='utf-8')  # エンコーディングを指定
 
 

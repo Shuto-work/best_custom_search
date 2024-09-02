@@ -33,8 +33,10 @@ with st.form(key="key_word_form"):
     search_end_page = st.number_input(
         "検索結果の何ページ目までデータ取得しますか？※最大10ページ目", step=1, value=1, min_value=1, max_value=10)
     sort_order = st.selectbox(
-        "検索順序を選択してください", ["Relevance", "date"])  # 検索順序の選択
-    output_csv = st.text_input("出力するCSVファイル名", "output.csv")  # 出力CSVファイル名の入力
+        "検索順序を選択してください", ["Relevance", "date"])  
+    output_csv = st.text_input("出力するCSVファイル名", "output.csv")  
+    # output_csv_path = st.text_input("CSV出力先のパス", value="C:\\Users\\<ユーザー名>\\Desktop\\output.csv")  # for Windows
+    output_csv_path = st.text_input("CSV出力先のパス", value="/Users/shutohayashi>/Desktop/output.csv")  # For Mac
     action_btn = st.form_submit_button("実行")
 
     if action_btn:
@@ -44,6 +46,7 @@ with st.form(key="key_word_form"):
         st.text(f'取得終了ページ：「{search_end_page}」')
         st.text(f'検索結果の表示順序：「{sort_order}」')
         st.text(f'出力CSVファイル名：「{output_csv}」')
+        st.text_input(f'CSV出力先のパス:「{output_csv_path}」' )
 
         # Save parameters to a JSON file
         params = {
@@ -51,7 +54,8 @@ with st.form(key="key_word_form"):
             "search_start_page": search_start_page,
             "search_end_page": search_end_page,
             "sort_order": sort_order,
-            "output_csv": output_csv  # 出力CSVファイル名を追加
+            "output_csv": output_csv,
+            "output_csv_path": output_csv_path
         }
         with open('params.json', 'w') as f:
             json.dump(params, f)
