@@ -1,11 +1,8 @@
-import requests
 import json
 import sys
 import subprocess
 import streamlit as st
 import os
-import pandas as pd
-from io import StringIO
 
 st.title('Custom Search API')
 st.caption('検索キーワードを入力すると、検索結果から電話番号と社名のリストを取得できます')
@@ -30,10 +27,6 @@ with st.expander("用語辞典"):
     **API**:  
     アプリ同士の連携のこと。今回はCSEとPythonで構成したこちらの画面を連携させています。
     """)
-
-# OSに応じてデスクトップのパスを取得する関数
-def get_desktop_path():
-    return os.path.join(os.path.expanduser("~"), "Desktop")
 
 with st.form(key="key_word_form"):
     key_word = st.text_input("検索キーワード")
@@ -67,7 +60,7 @@ with st.form(key="key_word_form"):
         # Pythonのフルパスを取得
         python_path = sys.executable
 
-        # subprocess.runを使ってスクリプトを実行します
+        # subprocess.runを使ってスクリプトを実行。Python実行環境を明示的に指定。
         result = subprocess.run([python_path, 'custom_search_scraper.py'],
                                 capture_output=True,
                                 text=True
