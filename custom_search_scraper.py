@@ -65,7 +65,7 @@ def extract_company_info_from_results(results):
 def create_csv(data):
     df = pd.DataFrame(data, columns=['電話番号', '顧客名', '備考欄'])
     logging.debug(f"DataFrame head: {df.head()}")
-    return df.to_csv(index=False, encoding='utf-8')
+    return df.to_csv(index=False, encoding='cp932')
 
 def main():
     with open('params.json') as f:
