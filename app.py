@@ -2,7 +2,6 @@ import json
 import sys
 import subprocess
 import streamlit as st
-import os
 
 st.title('Custom Search API')
 st.caption('検索キーワードを入力すると、検索結果から電話番号と社名のリストを取得できます')
