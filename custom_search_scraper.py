@@ -1,22 +1,24 @@
 import requests
-import re
+import logging
 import json
-import pandas as pd  # pandasをインポート
-# from secret_key import api_key, cse_id  # APIキーとCSE IDのインポート
+import pandas as pd
+import re
 import streamlit as st
 
 # `secrets.toml`からAPIキーを取得
 api_key = st.secrets["api_key"]
 cse_id = st.secrets["cse_id"]
 
-# APIキーを使った処理を行う
 st.write(f"API Key: {api_key}")
 st.write(f"CSE ID: {cse_id}")
 
+logging.basicConfig(
+    filename='debug.log',
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
-
-
-def search_with_custom_search_api(query, api_key, cse_id, start_index, sort_order):
+def search_with_custom_search_api(query, api_key, cse_id, start_index,sort_order):
     try:
         search_url = "https://www.googleapis.com/customsearch/v1"
         params = {
@@ -25,18 +27,23 @@ def search_with_custom_search_api(query, api_key, cse_id, start_index, sort_orde
             'q': query,
             'start': start_index,
         }
-
-        # sort_orderがdateの場合にsortパラメータを追加
+        
         if sort_order == "date":
             params['sort'] = "date"
 
+        logging.debug(f"Request URL: {search_url}")
+        logging.debug(f"Request Params: {params}")
+
         response = requests.get(search_url, params=params)
         response.raise_for_status()
-        return response.json().get('items', [])
+        data = response.json()
+        logging.debug(f"API response: {data}")
+        return data.get('items', [])
     except requests.RequestException as e:
-        print(f"Error during API request: {e}")
+        logging.error(f"Error during API request: {e}")
+        if 'response' in locals():
+          logging.error(f"Response content: {response.text}")
         return []
-
 
 def extract_phone_number_from_snippet(snippet):
     phone_match = re.search(r'\d{2,4}-\d{2,4}-\d{4}', snippet)
@@ -51,17 +58,16 @@ def extract_company_info_from_results(results):
         snippet = result.get('snippet')
         phone_number = extract_phone_number_from_snippet(snippet)
         if title and phone_number:
-            company_info.append([phone_number, title])
+            company_info.append([phone_number, title,snippet])
     return company_info
 
 def save_to_csv(filename, data):
-    # pandas DataFrameを使用してCSVファイルとして保存
-    df = pd.DataFrame(data, columns=['電話番号','顧客名',])
-    df.to_csv(filename, index=False, encoding='utf-8')  # エンコーディングを指定
-
+    df = pd.DataFrame(data, columns=['電話番号','顧客名','備考欄'])
+    logging.debug(f"DataFrame head: {df.head()}")
+    df.to_csv(filename, index=False, encoding='utf-8')
+    logging.info(f"Data saved to {filename}")
 
 def main():
-    # Load parameters from the JSON file
     with open('params.json') as f:
         params = json.load(f)
 
@@ -69,30 +75,29 @@ def main():
     search_start_page = params.get("search_start_page")
     search_end_page = params.get("search_end_page")
     output_csv = params.get("output_csv")
-    sort_order = params.get("sort_order", "Relevance")  # デフォルトはRelevance
+    output_csv_path = params.get("output_csv_path")
+    sort_order = params.get("sort_order", "Relevance")
 
-    if not query or not output_csv:
-        print("Error: Missing required parameters")
+    if not query or not output_csv_path:
+        logging.error("Error: Missing required parameters")
         return
 
     all_company_info = []
     for page in range(search_start_page, search_end_page + 1):
         start_index = (page - 1) * 10 + 1
-        results = search_with_custom_search_api(
-            query, api_key, cse_id, start_index, sort_order)
+        results = search_with_custom_search_api(query, api_key, cse_id, start_index, sort_order)
         if not results:
-            print(f"No results found for page {page}")
+            logging.info(f"No results found for page {page}")
             continue
 
         company_info = extract_company_info_from_results(results)
         all_company_info.extend(company_info)
 
     if not all_company_info:
-        print("No company information found")
+        logging.info("No company information found")
         return
 
-    save_to_csv(output_csv, all_company_info)
-
+    save_to_csv(output_csv_path, all_company_info)
 
 if __name__ == "__main__":
     main()
