@@ -4,6 +4,8 @@ import sys
 import subprocess
 import streamlit as st
 import os
+import pandas as pd
+from io import StringIO
 
 st.title('Custom Search API')
 st.caption('検索キーワードを入力すると、検索結果から電話番号と社名のリストを取得できます')
@@ -42,12 +44,6 @@ with st.form(key="key_word_form"):
     sort_order = st.selectbox(
         "検索順序を選択してください", ["Relevance", "date"])
     output_csv = st.text_input("出力するCSVファイル名", "CSEスクレイピングリスト.csv")
-
-    # デスクトップのパスを生成
-    desktop_path = get_desktop_path()
-    output_csv_path = os.path.join(desktop_path, output_csv)
-    st.text(f'出力CSVファイルパス: {output_csv_path}')
-
     action_btn = st.form_submit_button("実行")
 
     if action_btn:
@@ -57,14 +53,13 @@ with st.form(key="key_word_form"):
         st.text(f'取得終了ページ：「{search_end_page}」')
         st.text(f'検索結果の表示順序：「{sort_order}」')
         st.text(f'出力CSVファイル名：「{output_csv}」')
-        st.text(f'CSV出力先のパス:「{output_csv_path}」')
 
         params = {
             "key_word": key_word,
             "search_start_page": search_start_page,
             "search_end_page": search_end_page,
             "sort_order": sort_order,
-            "output_csv_path": output_csv_path
+            "output_csv": output_csv
         }
         with open('params.json', 'w') as f:
             json.dump(params, f)
@@ -78,8 +73,20 @@ with st.form(key="key_word_form"):
                                 text=True
                                 )
 
-        # Display execution result
+        # CSVデータの準備
         if result.returncode == 0:
+            csv_data = result.stdout
+            st.session_state.csv_data = csv_data
+            st.session_state.csv_file_name = output_csv
             st.success('実行完了')
         else:
             st.error('エラーが発生しました: ' + result.stderr)
+
+# ダウンロードボタンをフォーム外に配置
+if 'csv_data' in st.session_state:
+    st.download_button(
+        label="CSVファイルをダウンロード",
+        data=st.session_state.csv_data,
+        file_name=st.session_state.csv_file_name,
+        mime="text/csv"
+    )

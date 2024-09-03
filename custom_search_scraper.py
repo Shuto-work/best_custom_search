@@ -61,12 +61,11 @@ def extract_company_info_from_results(results):
             company_info.append([phone_number, title,snippet])
     return company_info
 
-def save_to_csv(filename, data):
-    df = pd.DataFrame(data, columns=['電話番号','顧客名','備考欄'])
+def create_csv(data):
+    df = pd.DataFrame(data, columns=['電話番号', '顧客名', '備考欄'])
     logging.debug(f"DataFrame head: {df.head()}")
-    df.to_csv(filename, index=False, encoding='utf-8')
-    logging.info(f"Data saved to {filename}")
-
+    return df.to_csv(index=False, encoding='utf-8')
+  
 def main():
     with open('params.json') as f:
         params = json.load(f)
@@ -75,7 +74,7 @@ def main():
     search_start_page = params.get("search_start_page")
     search_end_page = params.get("search_end_page")
     output_csv = params.get("output_csv")
-    output_csv_path = params.get("output_csv_path")
+    output_csv_path = params.get("output_csv")
     sort_order = params.get("sort_order", "Relevance")
 
     if not query or not output_csv_path:
@@ -97,7 +96,9 @@ def main():
         logging.info("No company information found")
         return
 
-    save_to_csv(output_csv_path, all_company_info)
+    csv_data = create_csv(all_company_info)
+    print(csv_data)  # CSVデータを標準出力に出力
+    # return csv_data
 
 if __name__ == "__main__":
     main()
