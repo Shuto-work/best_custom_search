@@ -61,7 +61,8 @@ def extract_company_info_from_results(results):
             company_info.append([phone_number, title,snippet])
     return company_info
 
-def create_csv(data):
+
+def create_csv(data, file_path):
     df = pd.DataFrame(data, columns=['電話番号', '顧客名', '備考欄'])
     logging.debug(f"DataFrame head: {df.head()}")
     return df.to_csv(index=False, encoding='shift-jis')
@@ -96,8 +97,11 @@ def main():
         logging.info("No company information found")
         return
 
-    csv_data = create_csv(all_company_info)
-    print(csv_data)  # CSVデータを標準出力に出力
+    # csv_data = create_csv(all_company_info)
+    # print(csv_data)  # CSVデータを標準出力に出力
+    
+    create_csv(all_company_info, output_csv_path)
+    logging.info(f"CSV file created at {output_csv_path}")
 
 if __name__ == "__main__":
     main()
