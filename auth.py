@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, session, url_for
+from flask import Flask, redirect, session, url_for
 from authlib.integrations.flask_client import OAuth
 import streamlit as st
 
