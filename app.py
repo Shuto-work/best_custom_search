@@ -18,16 +18,25 @@ with open(config_path) as file:
 config = {
     'credentials': {
         'usernames': {
-            st.secrets["username"]: {
-                'name': st.secrets["name"],
-                'password': st.secrets["password"]
-            }
+            username: {
+                'name': name,
+                'email': email,
+                'password': password
+            } for username, name, email, password in zip(
+                st.secrets["authentication"]["usernames"],
+                st.secrets["authentication"]["names"],
+                st.secrets["authentication"]["emails"],
+                st.secrets["authentication"]["passwords"]
+            )
         }
     },
     'cookie': {
-        'name': st.secrets["cookie_name"],
-        'key': st.secrets["cookie_key"],
-        'expiry_days': st.secrets["cookie_expiry_days"]
+        'name': st.secrets["authentication"]["cookie_name"],
+        'key': st.secrets["authentication"]["cookie_key"],
+        'expiry_days': st.secrets["authentication"]["cookie_expiry_days"]
+    },
+    'pre-authorized': {
+        'emails': st.secrets["authentication"]["pre_authorized_emails"]
     }
 }
 
