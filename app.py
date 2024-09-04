@@ -9,7 +9,6 @@ import os
 
 # 環境に応じて設定を読み込む関数
 
-
 def load_config():
     if os.path.exists('config.yaml'):
         # ローカル環境
@@ -44,39 +43,6 @@ def load_config():
 
 # 設定を読み込む
 config = load_config()
-
-# スクリプトのディレクトリを取得
-script_dir = os.path.dirname(os.path.abspath(__file__))
-# config.yamlへのパスを構築
-config_path = os.path.join(script_dir, 'config.yaml')
-
-with open(config_path) as file:
-    config = yaml.load(file, Loader=SafeLoader)
-
-config = {
-    'credentials': {
-        'usernames': {
-            username: {
-                'name': name,
-                'email': email,
-                'password': password
-            } for username, name, email, password in zip(
-                st.secrets["authentication"]["usernames"],
-                st.secrets["authentication"]["names"],
-                st.secrets["authentication"]["emails"],
-                st.secrets["authentication"]["passwords"]
-            )
-        }
-    },
-    'cookie': {
-        'name': st.secrets["authentication"]["cookie_name"],
-        'key': st.secrets["authentication"]["cookie_key"],
-        'expiry_days': st.secrets["authentication"]["cookie_expiry_days"]
-    },
-    'pre-authorized': {
-        'emails': st.secrets["authentication"]["pre_authorized_emails"]
-    }
-}
 
 authenticator = stauth.Authenticate(
     config['credentials'],
