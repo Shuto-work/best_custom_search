@@ -4,15 +4,21 @@ import streamlit_authenticator as stauth
 import json
 import sys
 import subprocess
+import os
 import streamlit as st
 
-# `secrets.toml`からAPIキーを取得
-api_key = st.secrets["api_key"]
-cse_id = st.secrets["cse_id"]
 
+if 'STREAMLIT_RUNNER_ENV' in os.environ:
 
-with open('./config.yaml') as file:
-    config = yaml.load(file, Loader=SafeLoader)
+    # config.tomlが存在すれば、config.tomlを使う
+    if 'config' in st.secrets:
+        config = st.secrets["config"]
+    else:
+        st.error("config.tomlが見つかりません")
+else:
+    # ローカル開発環境ではconfig.yamlを使う
+    with open('./config.yaml') as file:
+        config = yaml.load(file, Loader=SafeLoader)
 
 authenticator = stauth.Authenticate(
     config['credentials'],

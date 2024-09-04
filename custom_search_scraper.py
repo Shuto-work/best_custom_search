@@ -9,8 +9,6 @@ import streamlit as st
 api_key = st.secrets["api_key"]
 cse_id = st.secrets["cse_id"]
 
-st.write(f"API Key: {api_key}")
-st.write(f"CSE ID: {cse_id}")
 
 logging.basicConfig(
     filename='debug.log',
