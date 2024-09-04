@@ -7,44 +7,8 @@ import subprocess
 import streamlit as st
 import os
 
-
-# 環境に応じて設定を読み込む関数
-def load_config():
-    if os.path.exists('config.yaml'):
-        # ローカル環境
-        with open('config.yaml') as file:
-            return yaml.load(file, Loader=SafeLoader)
-    else:
-        # デプロイ環境 (Streamlit Secrets を使用)
-        return {
-            'credentials': {
-                'usernames': {
-                    username: {
-                        'email': email,
-                        'name': name,
-                        'password': password
-                    } for username, email, name, password in zip(
-                        st.secrets["authentication"]["usernames"],
-                        st.secrets["authentication"]["emails"],
-                        st.secrets["authentication"]["names"],
-                        st.secrets["authentication"]["passwords"]
-                    )
-                }
-            },
-            'cookie': {
-                'expiry_days': st.secrets["authentication"]["cookie_expiry_days"],
-                'key': st.secrets["authentication"]["cookie_key"],
-                'name': st.secrets["authentication"]["cookie_name"]
-            },
-            'pre-authorized': {
-                'emails': st.secrets["authentication"]["pre_authorized_emails"]
-            }
-        }
-
-
-# 設定を読み込む
-config = load_config()
-
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
 
 authenticator = stauth.Authenticate(
     config['credentials'],
@@ -144,3 +108,41 @@ elif st.session_state["authentication_status"] is False:
     st.error('ユーザー名/パスワードが不正です')
 elif st.session_state["authentication_status"] is None:
     st.warning('ユーザー名とパスワードを入力してください')
+
+
+# # 環境に応じて設定を読み込む関数
+# def load_config():
+#     if os.path.exists('config.yaml'):
+#         # ローカル環境
+#         with open('config.yaml') as file:
+#             return yaml.load(file, Loader=SafeLoader)
+#     else:
+#         # デプロイ環境 (Streamlit Secrets を使用)
+#         return {
+#             'credentials': {
+#                 'usernames': {
+#                     username: {
+#                         'email': email,
+#                         'name': name,
+#                         'password': password
+#                     } for username, email, name, password in zip(
+#                         st.secrets["authentication"]["usernames"],
+#                         st.secrets["authentication"]["emails"],
+#                         st.secrets["authentication"]["names"],
+#                         st.secrets["authentication"]["passwords"]
+#                     )
+#                 }
+#             },
+#             'cookie': {
+#                 'expiry_days': st.secrets["authentication"]["cookie_expiry_days"],
+#                 'key': st.secrets["authentication"]["cookie_key"],
+#                 'name': st.secrets["authentication"]["cookie_name"]
+#             },
+#             'pre-authorized': {
+#                 'emails': st.secrets["authentication"]["pre_authorized_emails"]
+#             }
+#         }
+
+
+# # 設定を読み込む
+# config = load_config()
