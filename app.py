@@ -8,6 +8,8 @@ import streamlit as st
 import os
 
 # 環境に応じて設定を読み込む関数
+
+
 def load_config():
     if os.path.exists('config.yaml'):
         # ローカル環境
@@ -39,7 +41,6 @@ def load_config():
                 'emails': st.secrets["authentication"]["pre_authorized_emails"]
             }
         }
-
 
 # 設定を読み込む
 config = load_config()
