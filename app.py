@@ -136,6 +136,6 @@ if st.session_state["authentication_status"]:
         )
 
 elif st.session_state["authentication_status"] is False:
-    st.error('ユーザー名/パスワードが不正です')
+    st.error('ユーザー名/パスワードが登録されていません。このアプリは限定ユーザーのみ利用できます。')
 elif st.session_state["authentication_status"] is None:
     st.warning('ユーザー名とパスワードを入力してください')

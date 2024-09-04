@@ -37,12 +37,15 @@ def search_with_custom_search_api(query, api_key, cse_id, start_index,sort_order
         data = response.json()
         logging.debug(f"API response: {data}")
         return data.get('items', [])
+    
     except requests.RequestException as e:
-        logging.error(f"Error during API request: {e}")
-        if 'response' in locals():
-          logging.error(f"Response content: {response.text}")
-        return []
-
+        if e.response.status_code == 403:
+            st.error("APIのクエリ上限に達しました。上限回数がリセットされるのは日本時間の17時です。")
+            logging.error(f"API query limit reached: {e}")
+        else:
+            st.error("検索中にエラーが発生しました。")
+            logging.error(f"HTTP error occurred: {e}")
+            
 def extract_phone_number_from_snippet(snippet):
     phone_match = re.search(r'\d{2,4}-\d{2,4}-\d{4}', snippet)
     if phone_match:
@@ -96,10 +99,7 @@ def main():
         return
 
     csv_data = create_csv(all_company_info)
-    print(csv_data)  # CSVデータを標準出力に出力
+    print(csv_data)
     
-    # create_csv(all_company_info, output_csv_path)
-    # logging.info(f"CSV file created at {output_csv_path}")
-
 if __name__ == "__main__":
     main()
