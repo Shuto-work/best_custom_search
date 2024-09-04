@@ -7,12 +7,8 @@ import subprocess
 import streamlit as st
 import os
 
-# 現在の作業ディレクトリを取得
-cwd = os.getcwd()
 
-# 絶対パスを指定してファイルを開く
-config_path = os.path.join(cwd, 'streamlit_web', 'config.yaml')
-with open(config_path) as file:
+with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
 
