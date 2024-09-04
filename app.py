@@ -11,10 +11,14 @@ import streamlit as st
 def load_config():
     if 'STREAMLIT_RUNNER_ENV' in os.environ:
         # Streamlit Cloud 環境では st.secrets から設定を読み込む
-        if 'config' in st.secrets:
-            return st.secrets["config"]
+        if 'api_key' in st.secrets and 'cse_id' in st.secrets:
+            return {
+                'credentials': st.secrets['credentials'],
+                'cookie': st.secrets['cookie'],
+                'pre-authorized': st.secrets['pre-authorized']
+            }
         else:
-            st.error("config が見つかりません")
+            st.error("必要な secrets が見つかりません")
             return None
     else:
         # ローカル開発環境では config.yaml を使う
@@ -28,14 +32,15 @@ def load_config():
 
 config = load_config()
 
-authenticator = stauth.Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days']
-)
-
-authenticator.login()
+if config:
+    authenticator = stauth.Authenticate(
+        config['credentials'],
+        config['cookie']['name'],
+        config['cookie']['key'],
+        config['cookie']['expiry_days']
+    )
+    
+    authenticator.login()
 
 if st.session_state["authentication_status"]:
     authenticator.logout()
