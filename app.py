@@ -5,12 +5,10 @@ import json
 import sys
 import subprocess
 import streamlit as st
-import os
 
 
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
-
 
 authenticator = stauth.Authenticate(
     config['credentials'],
