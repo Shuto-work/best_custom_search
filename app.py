@@ -8,17 +8,25 @@ import os
 import streamlit as st
 
 
-if 'STREAMLIT_RUNNER_ENV' in os.environ:
-
-    # config.tomlが存在すれば、config.tomlを使う
-    if 'config' in st.secrets:
-        config = st.secrets["config"]
+def load_config():
+    if 'STREAMLIT_RUNNER_ENV' in os.environ:
+        # Streamlit Cloud 環境では st.secrets から設定を読み込む
+        if 'config' in st.secrets:
+            return st.secrets["config"]
+        else:
+            st.error("config が見つかりません")
+            return None
     else:
-        st.error("config.tomlが見つかりません")
-else:
-    # ローカル開発環境ではconfig.yamlを使う
-    with open('./config.yaml') as file:
-        config = yaml.load(file, Loader=SafeLoader)
+        # ローカル開発環境では config.yaml を使う
+        try:
+            with open('./config.yaml') as file:
+                return yaml.load(file, Loader=SafeLoader)
+        except FileNotFoundError:
+            st.error("config.yaml が見つかりません")
+            return None
+
+
+config = load_config()
 
 authenticator = stauth.Authenticate(
     config['credentials'],
