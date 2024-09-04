@@ -20,13 +20,11 @@ def load_config():
             'credentials': {
                 'usernames': {
                     username: {
-                        'email': email,
                         'name': name,
                         'password': password
-                    } for username, email, name, password in zip(
+                    } for username, name, password in zip(
                         st.secrets["authentication"]["usernames"],
-                        st.secrets["authentication"]["emails"],
-                        st.secrets["authentication"]["names"],
+                        st.secrets["authentication"]["name"],
                         st.secrets["authentication"]["passwords"]
                     )
                 }
