@@ -5,10 +5,31 @@ import json
 import sys
 import subprocess
 import streamlit as st
+import os
 
+# スクリプトのディレクトリを取得
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# config.yamlへのパスを構築
+config_path = os.path.join(script_dir, 'config.yaml')
 
-with open('config.yaml', 'r', encoding='utf-8') as file:
+with open(config_path) as file:
     config = yaml.load(file, Loader=SafeLoader)
+
+config = {
+    'credentials': {
+        'usernames': {
+            st.secrets["username"]: {
+                'name': st.secrets["name"],
+                'password': st.secrets["password"]
+            }
+        }
+    },
+    'cookie': {
+        'name': st.secrets["cookie_name"],
+        'key': st.secrets["cookie_key"],
+        'expiry_days': st.secrets["cookie_expiry_days"]
+    }
+}
 
 authenticator = stauth.Authenticate(
     config['credentials'],
