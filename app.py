@@ -6,11 +6,8 @@ import sys
 import subprocess
 import streamlit as st
 
-# api_key = st.secrets["api_key"]
-# cse_id = st.secrets["cse_id"]
-# st.write(st.secrets)
 
-with open('./config.yaml') as file:
+with open('./.streamlit/config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
 authenticator = stauth.Authenticate(
