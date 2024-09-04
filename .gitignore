@@ -5,8 +5,8 @@ params.json
 myenv
 *.csv
 params.json
-secrets.toml
-config.toml
+.streamlit/
+config.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
