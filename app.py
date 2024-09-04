@@ -4,43 +4,24 @@ import streamlit_authenticator as stauth
 import json
 import sys
 import subprocess
-import os
 import streamlit as st
 
 
-def load_config():
-    if 'STREAMLIT_RUNNER_ENV' in os.environ:
-        # Streamlit Cloud 環境では st.secrets から設定を読み込む
-        if 'api_key' in st.secrets and 'cse_id' in st.secrets:
-            return {
-                'credentials': st.secrets['credentials'],
-                'cookie': st.secrets['cookie'],
-                'pre-authorized': st.secrets['pre-authorized']
-            }
-        else:
-            st.error("必要な secrets が見つかりません")
-            return None
-    else:
-        # ローカル開発環境では config.yaml を使う
-        try:
-            with open('./config.yaml') as file:
-                return yaml.load(file, Loader=SafeLoader)
-        except FileNotFoundError:
-            st.error("config.yaml が見つかりません")
-            return None
+api_key = st.secrets["api_key"]
+cse_id = st.secrets["cse_id"]
+st.write(st.secrets)
 
+with open('./config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
 
-config = load_config()
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days']
+)
 
-if config:
-    authenticator = stauth.Authenticate(
-        config['credentials'],
-        config['cookie']['name'],
-        config['cookie']['key'],
-        config['cookie']['expiry_days']
-    )
-    
-    authenticator.login()
+authenticator.login()
 
 if st.session_state["authentication_status"]:
     authenticator.logout()
@@ -127,6 +108,6 @@ if st.session_state["authentication_status"]:
         )
 
 elif st.session_state["authentication_status"] is False:
-    st.error('ユーザー名/パスワードが登録されていません')
+    st.error('ユーザー名/パスワードが不正です')
 elif st.session_state["authentication_status"] is None:
     st.warning('ユーザー名とパスワードを入力してください')
