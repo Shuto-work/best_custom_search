@@ -60,11 +60,13 @@ if st.session_state["authentication_status"]:
 
     with st.expander("留意点"):
         st.markdown("""
-              1. **検索回数について**:
-              - 1日100回までの上限（検索ページ数によらず）。
-              - 日本時間の16時 or 17時にリセット。
+              1. **検索回数の上限について**:
+              - 無料枠の場合、1日100クエリが上限。1クエリ = 1ページ分の検索結果。1ページ = 10位までの表示。
+              - （例 1）「大阪　090 土木」で検索、取得ページ数が1ページ分 = 1クエリ
+              - （例 2）「大阪　090 土木」で検索、取得ページ数が10ページ分 = 10クエリ
+              - 上限は、日本時間の17時にリセット。※詳細はユーザーマニュアルにて
               2. **検索ページ数について**:
-              - 最初の10ページまでの上限。APIの仕様上、11ページ目以降は検索結果が表示されません。そのため、検索ワードを適宜変えてヒット件数の母数を増やす等の工夫が必要です。
+              - APIの仕様上、10ページまでが上限。
               3. **検索結果の表示順について**:
               - Relevance（関連順）とdate（日付順）から選択可能。
               - 同じ検索ワードで異なるデータを取得できますが、重複結果もあるため取得量が2倍になるわけではありません。
@@ -82,11 +84,11 @@ if st.session_state["authentication_status"]:
     with st.form(key="key_word_form"):
         key_word = st.text_input("検索キーワード")
         search_start_page = st.number_input(
-            "検索結果の何ページ目からデータ取得しますか？※最低1ページ目", step=1, value=1, min_value=1, max_value=10)
+            "データ取得開始ページ", step=1, value=1, min_value=1, max_value=10)
         search_end_page = st.number_input(
-            "検索結果の何ページ目までデータ取得しますか？※最大10ページ目", step=1, value=1, min_value=1, max_value=10)
+            "データ取得終了ページ", step=1, value=1, min_value=1, max_value=10)
         sort_order = st.selectbox(
-            "検索順序を選択してください", ["Relevance", "date"])
+            "検索結果の表示順序（Relevance = 関連順, date = 日付順）", ["Relevance", "date"])
         output_csv = st.text_input("出力するCSVファイル名", "CSEスクレイピングリスト.csv")
         action_btn = st.form_submit_button("実行")
 
