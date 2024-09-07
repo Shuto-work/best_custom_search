@@ -47,6 +47,8 @@ def search_with_custom_search_api(query, api_key, cse_id, start_index,sort_order
             logging.error(f"HTTP error occurred: {e}")
             
 def extract_phone_number_from_snippet(snippet):
+    if snippet is None:
+        return None
     phone_match = re.search(r'\d{2,4}-\d{2,4}-\d{4}', snippet)
     if phone_match:
         return phone_match.group(0)
