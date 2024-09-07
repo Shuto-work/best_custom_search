@@ -59,12 +59,12 @@ def extract_company_info_from_results(results):
         snippet = result.get('snippet')
         phone_number = extract_phone_number_from_snippet(snippet)
         if title and phone_number:
-            company_info.append([phone_number, title,snippet])
+            company_info.append([phone_number, title])
     return company_info
 
 
 def create_csv(data):
-    df = pd.DataFrame(data, columns=['電話番号', '顧客名', '備考欄'])
+    df = pd.DataFrame(data, columns=['電話番号', '顧客名'])
     logging.debug(f"DataFrame head: {df.head()}")
     return df.to_csv(index=False, encoding='cp932')
 
