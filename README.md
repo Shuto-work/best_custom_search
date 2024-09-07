@@ -1,6 +1,6 @@
 # README Japanese
 ## Streamlitを使ったカスタム検索APIスクレイピング
-実際の案件で作成したWebアプリです。検索結果から電話番号と会社名のデータを取得できます。検索結果はCSVファイルとしてダウンロードできます。
+検索結果から電話番号と会社名のデータを取得できます。検索結果はCSVファイルとしてダウンロードできます。
 GUIにはStreamlitを使用しており、Google Custom Search Engine（CSE）APIと連携しています。
 CSVファイルが文字化けしている場合、[こちらのツール](<https://www.gas-laboratory.com/courses/take/csv-char-code-converter/texts/43893072-csv>)で変換可能です。
 
