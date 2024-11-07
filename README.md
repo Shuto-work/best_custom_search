@@ -24,6 +24,7 @@ git clone <repository-url>
 ```bash
 pip install -r requirements.txt
 ```
+requirements.txtファイルは、インストールされた依存関係にあるライブラリなどを記載しているファイルです。pythonはこのファイルを参照します。
 
 ## 設定
 secrets.tomlファイルを作成し、APIキーとCSE IDを設定。
